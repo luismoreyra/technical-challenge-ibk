@@ -1,2 +1,2 @@
 # technical-challenge-ibk
-Technical challenge that consists of creating a project that handles currency conversion.
+Api Rest to get exchange rate from US dollar (USD) to Destiny currency (Default: Nuevo sol (PEN)).
