@@ -12,7 +12,7 @@
 	<artifactId>currency-converter-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>currency-converter-api</name>
-	<description>Technical challenge that consists of creating a project that handles currency conversion.</description>
+	<description>Api Rest to get exchange rate from US dollar (USD) to Destiny currency (Default: Nuevo sol (PEN)).</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -54,6 +54,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>currency-converter-api</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
