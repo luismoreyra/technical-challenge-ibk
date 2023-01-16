@@ -12,6 +12,7 @@ import pe.interbank.currencyconverterapi.service.ExchangeRateService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,11 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         exchangeRateResponse.setRate(updateExchangeRateRequest.getRate());
         exchangeRateResponse.setOldRate(oldRate);
         return exchangeRateResponse;
+    }
+
+    @Override
+    public List<ExchangeRate> list() {
+        return this.exchangeRateRepository.findAll();
     }
 
     private ExchangeRate getExchangeRateByCode(String code) {
