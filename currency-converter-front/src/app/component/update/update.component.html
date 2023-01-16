@@ -1,0 +1,35 @@
+<div class="container m-5 mx-auto">
+  <div class="card">
+    <div class="card-header">
+      <strong>Update</strong>
+    </div>
+    <div class="card-body mx-auto">
+      <form [formGroup]="updateExchangeRateForm">
+        <div class="row g-3">
+          <div class="col-auto">
+            <label class="form-label">Currency</label>
+            <select name="code" class="form-select" formControlName="code" (change)="selectExchangeRate($event)">
+              <option value=""> -- Seleccione -- </option>
+              <ng-container  *ngFor="let exchangeRate of exchangeRateList$ | async">
+                <option *ngIf="exchangeRate.enabled" [value]="exchangeRate.code"> {{ exchangeRate.code }} - {{ exchangeRate.description }} </option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="col-auto">
+            <label for="rate" class="form-label">Rate</label>
+            <div class="input-group mb-3">
+              <input id="rate" type="number" class="form-control" formControlName="rate">
+            </div>
+          </div>
+        </div>
+        <div class="row g-3 mt-1 justify-content-center">
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary" (click)="update()" [disabled]="!updateExchangeRateForm.controls.code.value">Convert</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
