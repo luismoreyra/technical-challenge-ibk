@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.interbank.currencyconverterapi.bean.ExchangeAmountRequest;
 import pe.interbank.currencyconverterapi.bean.ExchangeAmountResponse;
+import pe.interbank.currencyconverterapi.bean.UpdateExchangeRateRequest;
+import pe.interbank.currencyconverterapi.bean.UpdateExchangeRateResponse;
 import pe.interbank.currencyconverterapi.repository.entity.ExchangeRate;
 import pe.interbank.currencyconverterapi.repository.ExchangeRateRepository;
 import pe.interbank.currencyconverterapi.service.ExchangeRateService;
@@ -20,18 +22,36 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeAmountResponse calculate(ExchangeAmountRequest exchangeAmountRequest) {
-        Optional<ExchangeRate> exchangeRate = exchangeRateRepository.findByCode(exchangeAmountRequest.getDestinyCurrency());
+        ExchangeRate exchangeRate = this.getExchangeRateByCode(exchangeAmountRequest.getDestinyCurrency());
         ExchangeAmountResponse exchangeAmountResponse = new ExchangeAmountResponse();
         exchangeAmountResponse.setAmount(exchangeAmountRequest.getAmount());
         exchangeAmountResponse.setOriginCurrency(exchangeAmountRequest.getOriginCurrency());
         exchangeAmountResponse.setDestinyCurrency(exchangeAmountRequest.getDestinyCurrency());
 
         BigDecimal amount = new BigDecimal(exchangeAmountRequest.getAmount());
-        BigDecimal rate = exchangeRate.orElseThrow(RuntimeException::new).getRate(); // TODO: throw custom exception
-        exchangeAmountResponse.setAmountExchange(amount.multiply(rate).setScale(10, RoundingMode.CEILING).toPlainString());
-        exchangeAmountResponse.setRateExchange(rate.toPlainString());
+        exchangeAmountResponse.setAmountExchange(amount.multiply(exchangeRate.getRate()).setScale(10, RoundingMode.CEILING).toPlainString());
+        exchangeAmountResponse.setRateExchange(exchangeRate.getRate().toPlainString());
 
         return exchangeAmountResponse;
+    }
+
+    @Override
+    public UpdateExchangeRateResponse update(UpdateExchangeRateRequest updateExchangeRateRequest) {
+        ExchangeRate exchangeRate = this.getExchangeRateByCode(updateExchangeRateRequest.getCode());
+        String oldRate = exchangeRate.getRate().toPlainString();
+        exchangeRate.setRate(new BigDecimal(updateExchangeRateRequest.getRate()));
+        this.exchangeRateRepository.save(exchangeRate);
+
+        UpdateExchangeRateResponse exchangeRateResponse = new UpdateExchangeRateResponse();
+        exchangeRateResponse.setCode(updateExchangeRateRequest.getCode());
+        exchangeRateResponse.setRate(updateExchangeRateRequest.getRate());
+        exchangeRateResponse.setOldRate(oldRate);
+        return exchangeRateResponse;
+    }
+
+    private ExchangeRate getExchangeRateByCode(String code) {
+        Optional<ExchangeRate> exchangeRate = this.exchangeRateRepository.findByCode(code);
+        return exchangeRate.orElseThrow(RuntimeException::new); // TODO: throw custom exception
     }
 
 }

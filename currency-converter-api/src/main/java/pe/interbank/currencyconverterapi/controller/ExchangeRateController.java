@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pe.interbank.currencyconverterapi.bean.ExchangeAmountRequest;
 import pe.interbank.currencyconverterapi.bean.ExchangeAmountResponse;
+import pe.interbank.currencyconverterapi.bean.UpdateExchangeRateRequest;
+import pe.interbank.currencyconverterapi.bean.UpdateExchangeRateResponse;
 import pe.interbank.currencyconverterapi.service.ExchangeRateService;
 
 @RestController
@@ -20,6 +22,12 @@ public class ExchangeRateController {
     @ResponseBody
     public ExchangeAmountResponse calculate(@RequestBody ExchangeAmountRequest exchangeAmountRequest) {
         return exchangeRateService.calculate(exchangeAmountRequest);
+    }
+
+    @PostMapping(value = "update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public UpdateExchangeRateResponse calculate(@RequestBody UpdateExchangeRateRequest updateExchangeRateRequest) {
+        return exchangeRateService.update(updateExchangeRateRequest);
     }
 
 }
